@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", "Segoe UI", sans-serif;
+  --color-ink: #20332f;
+  --color-brand: #26735f;
+  --color-brand-dark: #1e5a4b;
+  --color-mint: #dff3e9;
+  --color-coral: #e9634f;
+  --color-cream: #fbfcfa;
+}
+
+@layer base {
+  body { @apply min-h-screen bg-cream text-ink antialiased; }
+  button, input, select { @apply outline-none; }
+  button { @apply cursor-pointer; }
+}
+
+@layer components {
+  .focus-ring { @apply focus-visible:ring-3 focus-visible:ring-brand/20 focus-visible:ring-offset-2; }
+  .card { @apply rounded-2xl border border-slate-200/80 bg-white shadow-[0_1px_2px_rgba(15,23,42,.03),0_8px_28px_rgba(15,23,42,.04)]; }
+}
+
+@keyframes toast-in { from { opacity: 0; transform: translateY(-10px); } }
+.toast-enter-active { animation: toast-in .25s ease-out; }
+.toast-leave-active { transition: opacity .2s ease; }
+.toast-leave-to { opacity: 0; }
