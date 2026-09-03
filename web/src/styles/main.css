@@ -2,23 +2,31 @@
 
 @theme {
   --font-sans: "DM Sans", "Segoe UI", sans-serif;
-  --color-ink: #20332f;
-  --color-brand: #26735f;
-  --color-brand-dark: #1e5a4b;
-  --color-mint: #dff3e9;
-  --color-coral: #e9634f;
-  --color-cream: #fbfcfa;
+  --color-ink: #44506a;
+  --color-brand: #7096c8;
+  --color-brand-dark: #587eaf;
+  --color-mint: #e2f0ff;
+  --color-coral: #dc87aa;
+  --color-cream: #fff9fc;
+  --color-pink-soft: #fde5ef;
+  --color-pink-deep: #b85f83;
+  --color-blue-soft: #e2f0ff;
 }
 
 @layer base {
-  body { @apply min-h-screen bg-cream text-ink antialiased; }
+  body {
+    @apply min-h-screen bg-cream text-ink antialiased;
+    background-image:
+      radial-gradient(circle at 8% 12%, rgb(226 240 255 / .75) 0, transparent 24rem),
+      radial-gradient(circle at 92% 22%, rgb(253 229 239 / .8) 0, transparent 28rem);
+  }
   button, input, select { @apply outline-none; }
   button { @apply cursor-pointer; }
 }
 
 @layer components {
   .focus-ring { @apply focus-visible:ring-3 focus-visible:ring-brand/20 focus-visible:ring-offset-2; }
-  .card { @apply rounded-2xl border border-slate-200/80 bg-white shadow-[0_1px_2px_rgba(15,23,42,.03),0_8px_28px_rgba(15,23,42,.04)]; }
+  .card { @apply rounded-2xl border border-blue-soft bg-white/90 shadow-[0_1px_2px_rgba(112,150,200,.04),0_8px_28px_rgba(220,135,170,.08)]; }
 }
 
 @keyframes toast-in { from { opacity: 0; transform: translateY(-10px); } }

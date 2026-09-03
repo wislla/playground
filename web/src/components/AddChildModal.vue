@@ -21,7 +21,7 @@ function submit() { if (!form.name.trim()) return; emit('save', { ...form }); em
       <label class="block"><span class="mb-2 block text-sm font-semibold">Quantidade de tempos</span><select v-model.number="form.units" class="focus-ring w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"><option v-for="number in 8" :key="number" :value="number">{{ number }} tempo{{ number > 1 ? 's' : '' }} · {{ number * settings.minutesPerUnit }} min</option></select></label>
       <div class="rounded-xl bg-slate-50 p-4"><div class="flex justify-between text-sm"><span class="text-slate-500">Valor total</span><strong class="text-lg text-brand">{{ formatCurrency(total) }}</strong></div></div>
       <label class="flex cursor-pointer items-center justify-between rounded-xl border border-slate-200 p-4"><div><span class="block text-sm font-semibold">Pagamento realizado</span><span class="text-xs text-slate-500">Marque se o valor já foi recebido</span></div><input v-model="form.paid" type="checkbox" class="size-5 accent-brand" /></label>
-      <button class="focus-ring w-full rounded-xl bg-brand py-3 text-sm font-bold text-white hover:bg-brand-dark">Iniciar tempo</button>
+      <button class="focus-ring w-full rounded-xl bg-blue-soft py-3 text-sm font-bold text-brand-dark hover:bg-blue-soft/70">Iniciar tempo</button>
     </form>
   </BaseModal>
 </template>
