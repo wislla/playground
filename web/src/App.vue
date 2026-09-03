@@ -17,7 +17,7 @@ const { settings, now, activeSessions, finishedSessions, pendingPayments, totalT
   <div class="min-h-screen">
     <AppHeader @open-settings="showSettings = true" />
     <main class="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
-      <div class="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p class="mb-1 text-sm font-semibold text-brand-dark">VISÃO GERAL</p><h2 class="text-3xl font-bold tracking-[-.04em]">Olá! Vamos brincar?</h2><p class="mt-2 text-sm text-slate-500">Acompanhe todos os tempos em um só lugar.</p></div><button class="focus-ring flex items-center justify-center gap-2 rounded-xl bg-blue-soft px-5 py-3 text-sm font-bold text-brand-dark shadow-lg shadow-brand/10 hover:bg-blue-soft/70" @click="showAdd = true"><Plus :size="19" /> Adicionar criança</button></div>
+      <div class="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><h2 class="text-3xl font-bold tracking-[-.04em]">Olá! Vamos brincar?</h2><p class="mt-2 text-sm text-slate-500">Acompanhe todos os tempos em um só lugar.</p></div><button class="focus-ring flex items-center justify-center gap-2 rounded-xl bg-blue-soft px-5 py-3 text-sm font-bold text-brand-dark shadow-lg shadow-brand/10 hover:bg-blue-soft/70" @click="showAdd = true"><Plus :size="19" /> Adicionar criança</button></div>
       <StatsGrid :active="activeSessions.length" :pending="pendingPayments" :revenue="totalToday" />
 
       <section class="mt-10"><div class="mb-4 flex items-center gap-2"><Clock3 :size="19" class="text-brand" /><h2 class="text-lg font-bold">Brincando agora</h2><span class="rounded-full bg-mint px-2 py-0.5 text-xs font-bold text-brand">{{ activeSessions.length }}</span></div>
