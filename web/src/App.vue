@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { BellRing, Clock3, Plus, X } from 'lucide-vue-next'
 import { ref } from 'vue'
 import AddChildModal from './components/AddChildModal.vue'

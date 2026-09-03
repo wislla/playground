@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { Clock3, Settings } from 'lucide-vue-next'
-defineEmits(['open-settings'])
+defineEmits<{ 'open-settings': [] }>()
 </script>
 
 <template>

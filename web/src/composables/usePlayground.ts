@@ -1,12 +1,27 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import type { NewSession, PlaygroundSession, PlaygroundSettings, PlaygroundState } from '../types/playground'
 import { getRemainingSeconds } from '../utils/time'
 
-const STORAGE_KEY = 'tempo-de-brincar:v1'
-const defaultSettings = { minutesPerUnit: 15, pricePerUnit: 8 }
+export const STORAGE_KEY = 'tempo-de-brincar:v1'
+export const defaultSettings: PlaygroundSettings = { minutesPerUnit: 15, pricePerUnit: 8 }
 
-function loadState() {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+export function loadState(storage: Pick<Storage, 'getItem'> = localStorage): PlaygroundState {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { settings: defaultSettings, sessions: [] }
+    const saved: unknown = JSON.parse(storage.getItem(STORAGE_KEY) ?? 'null')
+    if (!isRecord(saved)) return { settings: defaultSettings, sessions: [] }
+
+    const savedSettings = isRecord(saved.settings) ? saved.settings : {}
+    return {
+      settings: {
+        minutesPerUnit: typeof savedSettings.minutesPerUnit === 'number' ? savedSettings.minutesPerUnit : defaultSettings.minutesPerUnit,
+        pricePerUnit: typeof savedSettings.pricePerUnit === 'number' ? savedSettings.pricePerUnit : defaultSettings.pricePerUnit,
+      },
+      sessions: Array.isArray(saved.sessions) ? saved.sessions as PlaygroundSession[] : [],
+    }
   } catch {
     return { settings: defaultSettings, sessions: [] }
   }
@@ -14,18 +29,18 @@ function loadState() {
 
 export function usePlayground() {
   const saved = loadState()
-  const settings = ref({ ...defaultSettings, ...saved.settings })
-  const sessions = ref(saved.sessions || [])
+  const settings = ref<PlaygroundSettings>({ ...defaultSettings, ...saved.settings })
+  const sessions = ref<PlaygroundSession[]>(saved.sessions)
   const now = ref(Date.now())
-  const justFinished = ref(null)
-  let interval
+  const justFinished = ref<PlaygroundSession | null>(null)
+  let interval: ReturnType<typeof window.setInterval> | undefined
 
   const activeSessions = computed(() => sessions.value.filter((item) => item.status === 'active'))
   const finishedSessions = computed(() => sessions.value.filter((item) => item.status === 'finished'))
   const pendingPayments = computed(() => sessions.value.filter((item) => !item.paid).length)
   const totalToday = computed(() => sessions.value.filter((item) => item.paid).reduce((sum, item) => sum + item.total, 0))
 
-  function addSession({ name, units, paid }) {
+  function addSession({ name, units, paid }: NewSession): void {
     const startedAt = Date.now()
     sessions.value.unshift({
       id: crypto.randomUUID(), name: name.trim(), units, paid, startedAt,
@@ -34,20 +49,20 @@ export function usePlayground() {
     })
   }
 
-  function updateSettings(nextSettings) {
+  function updateSettings(nextSettings: PlaygroundSettings): void {
     settings.value = { ...nextSettings }
   }
 
-  function markPaid(id) {
+  function markPaid(id: string): void {
     const item = sessions.value.find((session) => session.id === id)
     if (item) item.paid = true
   }
 
-  function removeSession(id) {
+  function removeSession(id: string): void {
     sessions.value = sessions.value.filter((session) => session.id !== id)
   }
 
-  function resetSession(id) {
+  function resetSession(id: string): void {
     const item = sessions.value.find((session) => session.id === id)
     if (!item) return
     item.startedAt = Date.now()
@@ -56,7 +71,7 @@ export function usePlayground() {
     item.notified = false
   }
 
-  function checkTimers() {
+  function checkTimers(): void {
     now.value = Date.now()
     sessions.value.forEach((session) => {
       if (session.status === 'active' && getRemainingSeconds(session, now.value) === 0) {
@@ -73,8 +88,13 @@ export function usePlayground() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ settings: settings.value, sessions: sessions.value }))
   }, { deep: true })
 
-  onMounted(() => { checkTimers(); interval = window.setInterval(checkTimers, 1000) })
-  onBeforeUnmount(() => window.clearInterval(interval))
+  onMounted(() => {
+    checkTimers()
+    interval = window.setInterval(checkTimers, 1000)
+  })
+  onBeforeUnmount(() => {
+    if (interval !== undefined) window.clearInterval(interval)
+  })
 
   return { settings, sessions, now, activeSessions, finishedSessions, pendingPayments, totalToday, justFinished, addSession, updateSettings, markPaid, removeSession, resetSession }
 }

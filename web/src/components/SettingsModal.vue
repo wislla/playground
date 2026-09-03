@@ -1,9 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { reactive } from 'vue'
 import BaseModal from './BaseModal.vue'
-const props = defineProps({ settings: Object })
-const emit = defineEmits(['close', 'save'])
-const form = reactive({ ...props.settings })
+import type { PlaygroundSettings } from '../types/playground'
+
+const props = defineProps<{ settings: PlaygroundSettings }>()
+const emit = defineEmits<{
+  close: []
+  save: [settings: PlaygroundSettings]
+}>()
+const form = reactive<PlaygroundSettings>({ ...props.settings })
 function submit() { emit('save', { minutesPerUnit: Number(form.minutesPerUnit), pricePerUnit: Number(form.pricePerUnit) }); emit('close') }
 </script>
 
