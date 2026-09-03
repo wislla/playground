@@ -1,9 +1,13 @@
-export function getRemainingSeconds(session, now = Date.now()) {
+import type { PlaygroundSession } from '../types/playground'
+
+type TimedSession = Pick<PlaygroundSession, 'endsAt' | 'status'>
+
+export function getRemainingSeconds(session: TimedSession, now = Date.now()): number {
   if (session.status === 'finished') return 0
   return Math.max(0, Math.ceil((session.endsAt - now) / 1000))
 }
 
-export function formatTimer(totalSeconds) {
+export function formatTimer(totalSeconds: number): string {
   const safeSeconds = Math.max(0, totalSeconds)
   const hours = Math.floor(safeSeconds / 3600)
   const minutes = Math.floor((safeSeconds % 3600) / 60)
@@ -12,10 +16,10 @@ export function formatTimer(totalSeconds) {
   return parts.map((part) => String(part).padStart(2, '0')).join(':')
 }
 
-export function formatClock(timestamp) {
+export function formatClock(timestamp: number): string {
   return new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(timestamp)
 }
 
-export function formatCurrency(value) {
+export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 }

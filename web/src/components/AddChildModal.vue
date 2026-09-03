@@ -1,10 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { computed, reactive } from 'vue'
 import BaseModal from './BaseModal.vue'
 import { formatCurrency } from '../utils/time'
-const props = defineProps({ settings: Object })
-const emit = defineEmits(['close', 'save'])
-const form = reactive({ name: '', units: 1, paid: true })
+import type { NewSession, PlaygroundSettings } from '../types/playground'
+
+const props = defineProps<{ settings: PlaygroundSettings }>()
+const emit = defineEmits<{
+  close: []
+  save: [session: NewSession]
+}>()
+const form = reactive<NewSession>({ name: '', units: 1, paid: true })
 const total = computed(() => form.units * props.settings.pricePerUnit)
 function submit() { if (!form.name.trim()) return; emit('save', { ...form }); emit('close') }
 </script>

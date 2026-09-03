@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { Banknote, CircleDollarSign, Timer } from 'lucide-vue-next'
 import { formatCurrency } from '../utils/time'
-defineProps({ active: Number, pending: Number, revenue: Number })
+defineProps<{ active: number, pending: number, revenue: number }>()
 </script>
 
 <template>

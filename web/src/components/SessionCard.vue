@@ -1,9 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { Check, Clock3, MoreVertical, RotateCcw, Trash2 } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 import { formatClock, formatCurrency, formatTimer, getRemainingSeconds } from '../utils/time'
-const props = defineProps({ session: Object, now: Number })
-defineEmits(['paid', 'remove', 'reset'])
+import type { PlaygroundSession } from '../types/playground'
+
+const props = defineProps<{ session: PlaygroundSession, now: number }>()
+defineEmits<{
+  paid: [id: string]
+  remove: [id: string]
+  reset: [id: string]
+}>()
 const menuOpen = ref(false)
 const remaining = computed(() => getRemainingSeconds(props.session, props.now))
 const isFinished = computed(() => props.session.status === 'finished')
